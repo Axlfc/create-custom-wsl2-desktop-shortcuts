@@ -3,6 +3,7 @@ declare wdesk="/mnt/c/Users/Axel F C/Desktop"
 declare wsl2desk="/home/axl/Desktop"
 declare ico_path="${wsl2desk}/git/icons/ico_images/"
 desk=$(pwd)
+
 if [ ${subsys} == "WSL2" ]; then
   echo "WSL2 Subsystem detected"
 
@@ -38,8 +39,33 @@ if [ ${subsys} == "WSL2" ]; then
               cd "$(pwd)/${prog_fold}"
               #echo "${prog_fold}_icon.ico"
               icon_path="$(echo "$(pwd)/$(echo ${prog_fold}_icon.ico)")"
-              
-              echo "${COMM}_icon=${icon_path}"
+              #echo "Create Command file (.vbs) containing right information about the image path and command"
+
+              #echo "${vbsfile}"
+              echo "
+set shell = CreateObject(\"WScript.Shell\")
+
+comm = \"wsl nohup ${COMM} &>/dev/null\"
+
+shell.Run comm,0" > "$(pwd)/${COMM}.vbs"
+
+              echo "
+@echo off
+
+set SCRIPT=\"%TEMP%\%RANDOM%-%RANDOM%-%RANDOM%-%RANDOM%.vbs\"
+
+echo Set oWS = WScript.CreateObject(\"WScript.Shell\") >> %SCRIPT%
+echo sLinkFile = \"%SYSTEMDRIVE%\Users\Axel F C\Desktop\\${prog_fold}.lnk\" >> %SCRIPT%
+echo Set oLink = oWS.CreateShortcut(sLinkFile) >> %SCRIPT%
+echo oLink.TargetPath = \"\\\\wsl.localhost\Debian\home\axl\Desktop\git\icons\ico_images\root\\${prog_fold}\\${COMM}.vbs\" >> %SCRIPT%
+echo oLink.IconLocation = \"\\\\wsl.localhost\Debian\home\axl\Desktop\git\icons\ico_images\root\\${prog_fold}\\${prog_fold}_icon.ico\" >> %SCRIPT%
+echo oLink.WorkingDirectory = \"\\\\wsl.localhost\Debian\home\axl\Desktop\git\icons\ico_images\root\\${prog_fold}\\${prog_fold}_icon.ico\" >> %SCRIPT%
+echo oLink.Save >> %SCRIPT%
+
+cscript /nologo %SCRIPT%
+
+del %SCRIPT%" > "$(pwd)/short.bat"
+              #hola >> "$(pwd)/${COMM}.vbs"
               cd ..
             else
               :
@@ -55,9 +81,7 @@ if [ ${subsys} == "WSL2" ]; then
         #done
         #cd ..
     done
-    
-    #echo "Process correct name of CORRECT_PROGRAM_NAME_icon.ico image and save the image to safe path"
-    #echo "Create Command file (.vbs) containing right information about the image path and command"
+        
     #echo "Create shortcut in windows desktop (written in short.bat from custom-wsl2-desktop)"
   done
 else
