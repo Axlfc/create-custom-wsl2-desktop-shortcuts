@@ -37,7 +37,7 @@ if [ ${subsys} == "WSL2" ]; then
               #echo "${COMM3}"
               cd "$(pwd)/${prog_fold}"
               #echo "${prog_fold}_icon.ico"
-              icon_path="$(echo "$(pwd)/$(echo ${prog_fold})")"
+              icon_path="$(echo "$(pwd)/$(echo ${prog_fold}_icon.ico)")"
               
               echo "${COMM}_icon=${icon_path}"
               cd ..
