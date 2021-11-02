@@ -11,11 +11,12 @@ if [ ${subsys} == "WSL2" ]; then
     path="${desk}/${program}"
     COMM="$(echo "$(cat /home/axl/Desktop/*${name}.desktop | grep "Exec=")" | cut -d "=" -f2 | cut -d " " -f1 | uniq)"
     echo $COMM
-    # We need a cleaner command... This might work, but neet to be refined and possibly accept the arguments from Exec= in .desktop file.
-    echo "SEARCH ICON: "
-    echo "Process NAME_PROGRAM.ico image"
-    echo "Create Command file"
-    echo "Create shortcut in windows (written in short.bat from custom-wsl2-desktop)"
+    # We need a cleaner command... This might work, but need to be refined and possibly accept some arguments from Exec= line in .desktop file.
+    echo "SEARCH ICON IN ico_images FOLDER STRUCTURE: "
+    
+    echo "Process correct name of CORRECT_PROGRAM_NAME_icon.ico image and save the image to safe path"
+    echo "Create Command file (.vbs) containing right information about the image path and command"
+    echo "Create shortcut in windows' desktop (written in short.bat from custom-wsl2-desktop)"
   done
 else
   echo "We don't find any WSL2 Subsystem"
